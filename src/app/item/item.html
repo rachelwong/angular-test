@@ -1,0 +1,30 @@
+<div class="item d-flex flex-row align-items-center justify-content-start">
+  <input
+    [id]="item.description"
+    type="checkbox"
+    (change)="item.done = !item.done"
+    [checked]="item.done"
+    class="me-4"
+  />
+  <label>{{ item.description }}</label>
+  @if (!editable) {
+  <div class="btn-wrapper ms-2">
+    <button class="btn btn-info mx-2" (click)="editable = !editable">Edit</button>
+    <button class="btn btn-danger mx-2" (click)="remove.emit()">Delete</button>
+  </div>
+  } @if(editable) {
+  <div class="container d-flex">
+    <input
+      placeholder="Edit item description"
+      [value]="item.description"
+      #editedItem
+      (keyup.enter)="saveItem(editedItem.value)"
+      class="mx-2"
+    />
+    <div class="btn-wrapper d-flex">
+      <button class="btn btn-success mx-2" (click)="saveItem(editedItem.value)">Save</button>
+      <button class="btn btn-warning mx-2" (click)="editable = !editable">Cancel</button>
+    </div>
+  </div>
+  }
+</div>
