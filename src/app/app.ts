@@ -11,7 +11,7 @@ import { ItemComponent } from './item/item';
 })
 export class App {
   componentTitle = 'Angular Todo list attempt';
-  filter: 'all' | 'active' | 'done' = 'all';
+  filter: 'all' | 'inactive' | 'done' = 'all';
 
   allItems = [
     { description: 'do something', done: true },
@@ -23,7 +23,7 @@ export class App {
       return this.allItems;
     }
     return this.allItems.filter((x) =>
-      this.filter === 'done' ? x.done === true : x.done === false
+      this.filter === 'done' ? x.done === true : this.filter === 'inactive' ? x.done === false : x
     );
   }
 
@@ -42,5 +42,9 @@ export class App {
     console.log('remove', item);
     //TODO check
     this.allItems = this.allItems.filter((x) => item.description !== x.description);
+  }
+
+  setFilter(value: 'all' | 'inactive' | 'done') {
+    this.filter = value;
   }
 }

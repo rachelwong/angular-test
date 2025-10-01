@@ -1,4 +1,9 @@
 <div class="main container text-start my-0 mx-auto">
+  <div class="container d-flex align-items-start">
+    <button class="btn btn-success mx-2" (click)="setFilter('all')">All</button>
+    <button class="btn btn-warning mx-2" (click)="setFilter('done')">Done</button>
+    <button class="mx-2 btn btn-secondary" (click)="setFilter('inactive')">Inactive</button>
+  </div>
   <div class="text-field mb-3">
     <label for="addItemInput" class="me-3">Add a todo item</label>
     <input
