@@ -13,7 +13,6 @@ import { TodoService } from './services/TodoService';
 @Injectable({ providedIn: 'root' })
 export class App implements OnInit {
   componentTitle = 'Angular Todo list attempt';
-  filter: 'all' | 'inactive' | 'done' = 'all';
   todos: Item[] | undefined;
   error: boolean | undefined;
 
@@ -24,7 +23,6 @@ export class App implements OnInit {
   }
 
   fetchData(): void {
-    console.log('fetch data');
     this.todoService.loadData().subscribe();
   }
 
@@ -36,16 +34,11 @@ export class App implements OnInit {
     ) {
       return;
     }
-    this.todos?.push({ id: '', description, done: false });
+    this.todoService.addTodo({ id: '', description, done: false }).subscribe();
   }
 
   remove(item: Item) {
     console.log('remove', item);
-    //TODO check
-    this.todos = this.todos?.filter((x) => item.description !== x.description);
-  }
-
-  setFilter(value: 'all' | 'inactive' | 'done') {
-    this.filter = value;
+    this.todoService.deleteTodo(item.id).subscribe();
   }
 }

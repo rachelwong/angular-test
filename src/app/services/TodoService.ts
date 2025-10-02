@@ -23,7 +23,7 @@ export class TodoService {
   }
 
   addTodo(item: Item) {
-    return this.http.post<any>(environment.apiBasePath, item).pipe(
+    return this.http.post<Item>(environment.apiBasePath, item).pipe(
       tap((newItem) => {
         const current = this.dataSource.value ?? [];
         this.dataSource.next([...current, newItem]);
