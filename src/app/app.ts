@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, inject, Injectable, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { Item } from '../types/Item';
 import { ItemComponent } from './item/item';
-import { environment } from '../environments/environment';
 import { TodoService } from './services/TodoService';
 
 @Component({
@@ -13,7 +11,7 @@ import { TodoService } from './services/TodoService';
   styleUrl: './app.css',
 })
 @Injectable({ providedIn: 'root' })
-export class App {
+export class App implements OnInit {
   componentTitle = 'Angular Todo list attempt';
   filter: 'all' | 'inactive' | 'done' = 'all';
   todos: Item[] | undefined;
@@ -21,25 +19,13 @@ export class App {
 
   constructor(private todoService: TodoService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.fetchData();
   }
 
   fetchData(): void {
-    this.todoService.getTodos().subscribe((data: Item[]) => {
-      this.todos = data;
-    });
-  }
-  get items(): Item[] {
-    console.log('this.todos', this.todos);
-    if (this.filter === 'all') {
-      return this.todos ?? [];
-    }
-    return (
-      this.todos?.filter((x) =>
-        this.filter === 'done' ? x.done === true : this.filter === 'inactive' ? x.done === false : x
-      ) ?? []
-    );
+    console.log('fetch data');
+    this.todoService.loadData().subscribe();
   }
 
   addItem(description: string) {
