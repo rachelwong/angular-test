@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, Injectable, OnInit } from '@angular/core';
 import { Item } from '../types/Item';
 import { ItemComponent } from './item/item';
+import { environment } from '../environments/environment';
+import { TodoService } from './services/TodoService';
 
 @Component({
   selector: 'app-root',
@@ -9,21 +12,33 @@ import { ItemComponent } from './item/item';
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
+@Injectable({ providedIn: 'root' })
 export class App {
   componentTitle = 'Angular Todo list attempt';
   filter: 'all' | 'inactive' | 'done' = 'all';
+  todos: Item[] | undefined;
+  error: boolean | undefined;
 
-  allItems = [
-    { description: 'do something', done: true },
-    { description: 'item two', done: false },
-  ];
+  constructor(private todoService: TodoService) {}
 
+  ngOnInit() {
+    this.fetchData();
+  }
+
+  fetchData(): void {
+    this.todoService.getTodos().subscribe((data: Item[]) => {
+      this.todos = data;
+    });
+  }
   get items(): Item[] {
+    console.log('this.todos', this.todos);
     if (this.filter === 'all') {
-      return this.allItems;
+      return this.todos ?? [];
     }
-    return this.allItems.filter((x) =>
-      this.filter === 'done' ? x.done === true : this.filter === 'inactive' ? x.done === false : x
+    return (
+      this.todos?.filter((x) =>
+        this.filter === 'done' ? x.done === true : this.filter === 'inactive' ? x.done === false : x
+      ) ?? []
     );
   }
 
@@ -31,17 +46,17 @@ export class App {
     // if no description provided or description already exists, do not add
     if (
       description.trim().length === 0 &&
-      !!this.items.find((x) => x.description === description)
+      !!this.todos?.find((x) => x.description === description)
     ) {
       return;
     }
-    this.allItems.push({ description, done: false });
+    this.todos?.push({ id: '', description, done: false });
   }
 
   remove(item: Item) {
     console.log('remove', item);
     //TODO check
-    this.allItems = this.allItems.filter((x) => item.description !== x.description);
+    this.todos = this.todos?.filter((x) => item.description !== x.description);
   }
 
   setFilter(value: 'all' | 'inactive' | 'done') {

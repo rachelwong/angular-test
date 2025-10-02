@@ -9,14 +9,11 @@ import { Item } from '../../types/Item';
   styleUrl: './item.css',
 })
 export class ItemComponent {
-  editable = false; // default state
-
   @Input() item!: Item; // ! means always have value
   @Output() remove = new EventEmitter<Item>();
 
   saveItem(description: string) {
     if (!description) return;
-    this.editable = false;
     this.item.description = description;
   }
 }
